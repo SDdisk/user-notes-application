@@ -8,3 +8,7 @@ spring:
     driver-class-name: ${DB_DRIVER_CLASS_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  h2:
+    console:
+      path: "/h2"
+      enabled: true

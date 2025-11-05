@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: user-notes-backend
+  main:
+    banner-mode: off
+  datasource:
+    url: ${DB_URL}
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}

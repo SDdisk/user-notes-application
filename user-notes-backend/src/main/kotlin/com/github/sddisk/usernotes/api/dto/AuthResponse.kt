@@ -1,11 +1,8 @@
 package com.github.sddisk.usernotes.api.dto
 
-import com.github.sddisk.usernotes.store.entity.Role
-import java.util.UUID
+import com.fasterxml.jackson.annotation.JsonProperty
 
 data class AuthResponse(
-    val id: UUID?,
-    val username: String,
-    val email: String,
-    val role: Role,
+    @JsonProperty("token")
+    val accessToken: String,
 )

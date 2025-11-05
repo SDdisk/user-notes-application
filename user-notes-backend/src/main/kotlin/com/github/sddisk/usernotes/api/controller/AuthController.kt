@@ -26,4 +26,8 @@ class AuthController(
     @ResponseStatus(HttpStatus.OK)
     fun login(@RequestBody request: LoginRequestDto): AuthResponse =
         authService.login(request)
+
+    // TODO -> logout
+
+    // TODO -> refresh token
 }

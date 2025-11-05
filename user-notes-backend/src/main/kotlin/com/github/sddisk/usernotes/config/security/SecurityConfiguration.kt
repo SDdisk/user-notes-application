@@ -33,6 +33,7 @@ class SecurityConfiguration(
             .cors { it.disable() }
             //.headers { it.disable() } // fix h2 page error: ERR_BLOCKED_BY_RESPONSE
             .sessionManagement { it.sessionCreationPolicy(STATELESS) }
+            // TODO -> exception handling
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/auth/**").permitAll()

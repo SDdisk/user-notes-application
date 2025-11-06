@@ -34,7 +34,6 @@ class AuthService(
 
         log.info("Saving user=$user")
         val saved = userService.save(user)
-        log.info("User=$saved saved")
 
         log.info("Loading user details")
         val userDetails = userService.loadUserByUsername(saved.email)
@@ -76,7 +75,7 @@ class AuthService(
     private fun RegisterRequestDto.toUser() = User(
         email = email,
         username = username,
-        password = passwordEncoder.encode(password)
+        password = password // passEncoder -> userService
     )
 
     companion object {

@@ -16,7 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+    // The dependencies of some of the beans in the application context form a cycle:
+    //private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
 
     @Bean
@@ -27,19 +28,19 @@ class SecurityConfiguration(
         authConfig.authenticationManager
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
+    fun securityFilterChain(http: HttpSecurity, jwtAuthFilter: JwtAuthenticationFilter): SecurityFilterChain =
         http
             .csrf { it.disable() }
             .cors { it.disable() }
-            //.headers { it.disable() } // fix h2 page error: ERR_BLOCKED_BY_RESPONSE
+            .headers { it.disable() } // fix h2 page error: ERR_BLOCKED_BY_RESPONSE
             .sessionManagement { it.sessionCreationPolicy(STATELESS) }
             // TODO -> exception handling
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/**", "/h2/**").permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { it.disable() }
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
 }

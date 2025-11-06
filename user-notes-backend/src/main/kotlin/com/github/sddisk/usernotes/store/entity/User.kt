@@ -13,11 +13,11 @@ import java.util.UUID
 class User(
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    val username: String = "",
+    var username: String = "",
     @NaturalId
     val email: String = "",
-    val password: String = "",
-    val role: Role = Role.USER,
+    var password: String = "",
+    var role: Role = Role.USER,
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -26,7 +26,7 @@ class User(
         return this.email == other.email
     }
     override fun hashCode(): Int = email.hashCode()
-    override fun toString(): String = "User(id=$id, username=$username, email=$email, role=$role"
+    override fun toString(): String = "User(id=$id, username=$username, email=$email, password=[HIDDEN], role=$role)"
 }
 
 enum class Role {

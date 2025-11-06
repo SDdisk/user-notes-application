@@ -24,7 +24,11 @@ class JwtService(
         )
 
     // refresh token
-    /* TODO -> refresh token */
+    fun generateRefreshToken(userDetails: UserDetails) =
+        buildToken(
+            userDetails = userDetails,
+            expirationDate = Date(System.currentTimeMillis() + jwtProperty.refreshTokenExpiration)
+        )
 
     // is token valid
     fun isTokenValid(token: String, userDetails: UserDetails): Boolean =

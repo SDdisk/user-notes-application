@@ -15,13 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration(
-    // The dependencies of some of the beans in the application context form a cycle:
-    //private val jwtAuthenticationFilter: JwtAuthenticationFilter
-) {
+class SecurityConfiguration {
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder() // in AuthService
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager =

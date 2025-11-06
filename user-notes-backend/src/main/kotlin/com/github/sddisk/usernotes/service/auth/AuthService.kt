@@ -5,24 +5,31 @@ import com.github.sddisk.usernotes.api.dto.LoginRequestDto
 import com.github.sddisk.usernotes.api.dto.RegisterRequestDto
 import com.github.sddisk.usernotes.exception.UserAlreadyExistsException
 import com.github.sddisk.usernotes.service.jwt.JwtService
+import com.github.sddisk.usernotes.service.jwt.token.TokenService
 import com.github.sddisk.usernotes.service.user.UserService
 import com.github.sddisk.usernotes.store.entity.User
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.security.SignatureException
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+
+/*
+    TODO -> need refactor
+ */
 
 @Service
 class AuthService(
     private val userService: UserService,
-    private val passwordEncoder: PasswordEncoder,
     private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService,
+    private val tokenService: TokenService,
 ) {
     // register
-    fun register(request: RegisterRequestDto): AuthResponse {
-        log.info("Register with request=$request") // TODO -> print only email in logs, cuz need to hide the password
+    fun register(request: RegisterRequestDto, servletResponse: HttpServletResponse): AuthResponse {
+        log.info("Register with request=$request")
 
         if (userService.existByEmail(request.email)) {
             log.error("User with request email=${request.email} already exists")
@@ -39,6 +46,12 @@ class AuthService(
         val userDetails = userService.loadUserByUsername(saved.email)
         log.info("Loaded user details. Username=${userDetails.username}")
 
+        log.info("Creating refresh token cookie")
+        tokenService.createRefreshTokenCookie(
+            refreshToken = jwtService.generateRefreshToken(userDetails),
+            servletResponse = servletResponse
+        )
+
         log.info("Return authentication response with access token after successful registration :)")
         return AuthResponse(
             accessToken = jwtService.generateAccessToken(userDetails)
@@ -46,8 +59,8 @@ class AuthService(
     }
 
     // login
-    fun login(request: LoginRequestDto): AuthResponse {
-        log.info("Login with request=$request") // TODO -> print only email in logs, cuz need to hide the password
+    fun login(request: LoginRequestDto, servletResponse: HttpServletResponse): AuthResponse {
+        log.info("Login with request=$request")
 
         log.info("Authentication...")
         authenticationManager.authenticate(
@@ -61,16 +74,48 @@ class AuthService(
         val userDetails = userService.loadUserByUsername(request.email)
         log.info("Loaded user details. Username=${userDetails.username}")
 
+        log.info("Creating refresh token cookie")
+        tokenService.createRefreshTokenCookie(
+            refreshToken = jwtService.generateRefreshToken(userDetails),
+            servletResponse = servletResponse
+        )
+
         log.info("Return authentication response with access token after successful login :P")
         return AuthResponse(
             accessToken = jwtService.generateAccessToken(userDetails)
         )
     }
 
-    // TODO -> logout
+    fun logout(servletResponse: HttpServletResponse) {
+        log.info("Logout request -> deleting refresh token cookie")
+        tokenService.deleteRefreshTokenCookie(servletResponse)
+        log.info("Successful logout")
+    }
 
-    // TODO -> refresh token
+    fun refreshToken(refreshToken: String): AuthResponse {
+        log.info("Request to refresh token=$refreshToken")
 
+        log.info("Extract email from refresh token")
+        val email = jwtService.extractEmail(refreshToken)
+            ?: run {
+                log.error("Email not extracted from refresh token")
+                throw MalformedJwtException("Invalid refresh token")
+            }
+
+        log.info("Loading user details with email=$email")
+        val userDetails = userService.loadUserByUsername(email)
+
+        log.info("Validate refresh token with user details=$userDetails")
+        if (jwtService.isTokenValid(refreshToken, userDetails).not()){
+            log.error("Refresh token is not valid")
+            throw SignatureException("Invalid or expired refresh token")
+        }
+
+        log.info("Return authentication response with access token after successful refresh token :3")
+        return AuthResponse(
+            accessToken = jwtService.generateAccessToken(userDetails)
+        )
+    }
 
     private fun RegisterRequestDto.toUser() = User(
         email = email,

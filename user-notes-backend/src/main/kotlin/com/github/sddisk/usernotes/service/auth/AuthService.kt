@@ -5,7 +5,6 @@ import com.github.sddisk.usernotes.api.dto.auth.LoginRequestDto
 import com.github.sddisk.usernotes.api.dto.auth.RegisterRequestDto
 import com.github.sddisk.usernotes.exception.UserAlreadyExistsException
 import com.github.sddisk.usernotes.service.jwt.JwtService
-import com.github.sddisk.usernotes.service.jwt.token.TokenService
 import com.github.sddisk.usernotes.service.user.UserService
 import com.github.sddisk.usernotes.store.entity.User
 import io.jsonwebtoken.MalformedJwtException
@@ -21,7 +20,6 @@ class AuthService(
     private val userService: UserService,
     private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService,
-    private val tokenService: TokenService,
 ) {
 
     fun register(request: RegisterRequestDto, servletResponse: HttpServletResponse): AuthResponse {
@@ -43,7 +41,7 @@ class AuthService(
         log.info("Loaded user details. Username=${userDetails.username}")
 
         log.info("Creating refresh token cookie")
-        tokenService.createRefreshTokenCookie(
+        jwtService.createRefreshTokenCookie(
             refreshToken = jwtService.generateRefreshToken(userDetails),
             servletResponse = servletResponse
         )
@@ -70,7 +68,7 @@ class AuthService(
         log.info("Loaded user details. Username=${userDetails.username}")
 
         log.info("Creating refresh token cookie")
-        tokenService.createRefreshTokenCookie(
+        jwtService.createRefreshTokenCookie(
             refreshToken = jwtService.generateRefreshToken(userDetails),
             servletResponse = servletResponse
         )
@@ -83,7 +81,7 @@ class AuthService(
 
     fun logout(servletResponse: HttpServletResponse) {
         log.info("Logout request -> deleting refresh token cookie")
-        tokenService.deleteRefreshTokenCookie(servletResponse)
+        jwtService.deleteRefreshTokenCookie(servletResponse)
         log.info("Successful logout")
     }
 

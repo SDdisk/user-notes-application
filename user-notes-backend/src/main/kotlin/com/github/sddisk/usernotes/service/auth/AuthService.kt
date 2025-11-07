@@ -16,10 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
 
-/*
-    TODO -> need refactor
- */
-
 @Service
 class AuthService(
     private val userService: UserService,
@@ -27,13 +23,13 @@ class AuthService(
     private val jwtService: JwtService,
     private val tokenService: TokenService,
 ) {
-    // register
+
     fun register(request: RegisterRequestDto, servletResponse: HttpServletResponse): AuthResponse {
         log.info("Register with request=$request")
 
         if (userService.existByEmail(request.email)) {
             log.error("User with request email=${request.email} already exists")
-            throw UserAlreadyExistsException("User with email=${request.email} already exists in repository.")
+            throw UserAlreadyExistsException("User with email=${request.email} already exists")
         }
 
         log.info("Mapping request to user")
@@ -58,11 +54,10 @@ class AuthService(
         )
     }
 
-    // login
     fun login(request: LoginRequestDto, servletResponse: HttpServletResponse): AuthResponse {
         log.info("Login with request=$request")
 
-        log.info("Authentication...")
+        log.info("Authentication")
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 request.email,

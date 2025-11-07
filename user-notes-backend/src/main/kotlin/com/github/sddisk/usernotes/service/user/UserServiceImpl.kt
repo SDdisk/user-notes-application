@@ -21,24 +21,24 @@ class UserServiceImpl(
 
     override fun save(user: User): User =
         userRepository.save(user.withHashPassword())
-            .also {
-                log.info("Saved user=$it")
+            .also { user ->
+                log.info("Saved user=$user")
             }
 
     override fun findByEmail(email: String): User =
         userRepository.findByEmail(email)
-            ?: throw UserNotFoundException("User with email=$email not found in repository.")
+            ?: throw UserNotFoundException("User with email=$email not found")
 
     override fun existByEmail(email: String): Boolean =
         userRepository.existsByEmail(email)
 
     override fun findById(id: UUID): User =
         userRepository.findByIdOrNull(id)
-            ?: throw UserNotFoundException("User with id=$id not found in repository.")
+            ?: throw UserNotFoundException("User with id=$id not found")
 
     override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByEmail(username)
-            ?: throw UsernameNotFoundException("User with email=$username not found in repository.")
+            ?: throw UsernameNotFoundException("User with email=$username not found")
 
         return SecurityUser.builder()
             .username(user.email)

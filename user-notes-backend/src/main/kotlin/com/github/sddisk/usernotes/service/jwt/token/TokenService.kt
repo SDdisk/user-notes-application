@@ -20,8 +20,8 @@ class TokenService(
             maxAge = jwtService.getClaim(refreshToken, Claims::getExpiration)
                 ?.time?.toInt() ?: 0
         }.also { cookie ->
-            log.info("Cookie added")
             servletResponse.addCookie(cookie)
+            log.info("Cookie created")
         }
 
     fun deleteRefreshTokenCookie(servletResponse: HttpServletResponse) =
@@ -31,8 +31,8 @@ class TokenService(
             path = "/"
             maxAge = 0
         }.also { cookie ->
-            log.info("Cookie deleted")
             servletResponse.addCookie(cookie)
+            log.info("Cookie deleted")
         }
 
     companion object {

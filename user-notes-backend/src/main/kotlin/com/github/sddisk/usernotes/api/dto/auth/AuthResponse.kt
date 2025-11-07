@@ -1,4 +1,4 @@
-package com.github.sddisk.usernotes.api.dto
+package com.github.sddisk.usernotes.api.dto.auth
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

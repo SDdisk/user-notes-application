@@ -1,8 +1,8 @@
 package com.github.sddisk.usernotes.service.auth
 
-import com.github.sddisk.usernotes.api.dto.AuthResponse
-import com.github.sddisk.usernotes.api.dto.LoginRequestDto
-import com.github.sddisk.usernotes.api.dto.RegisterRequestDto
+import com.github.sddisk.usernotes.api.dto.auth.AuthResponse
+import com.github.sddisk.usernotes.api.dto.auth.LoginRequestDto
+import com.github.sddisk.usernotes.api.dto.auth.RegisterRequestDto
 import com.github.sddisk.usernotes.exception.UserAlreadyExistsException
 import com.github.sddisk.usernotes.service.jwt.JwtService
 import com.github.sddisk.usernotes.service.jwt.token.TokenService

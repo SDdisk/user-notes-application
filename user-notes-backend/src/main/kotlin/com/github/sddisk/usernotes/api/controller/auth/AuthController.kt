@@ -1,8 +1,8 @@
-package com.github.sddisk.usernotes.api.controller
+package com.github.sddisk.usernotes.api.controller.auth
 
-import com.github.sddisk.usernotes.api.dto.AuthResponse
-import com.github.sddisk.usernotes.api.dto.LoginRequestDto
-import com.github.sddisk.usernotes.api.dto.RegisterRequestDto
+import com.github.sddisk.usernotes.api.dto.auth.AuthResponse
+import com.github.sddisk.usernotes.api.dto.auth.LoginRequestDto
+import com.github.sddisk.usernotes.api.dto.auth.RegisterRequestDto
 import com.github.sddisk.usernotes.service.auth.AuthService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid

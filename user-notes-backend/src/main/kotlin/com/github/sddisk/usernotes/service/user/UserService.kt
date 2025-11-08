@@ -1,6 +1,6 @@
 package com.github.sddisk.usernotes.service.user
 
-import com.github.sddisk.usernotes.store.entity.User
+import com.github.sddisk.usernotes.store.entity.user.User
 import org.springframework.security.core.userdetails.UserDetailsService
 import java.util.UUID
 

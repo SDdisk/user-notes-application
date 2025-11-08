@@ -1,6 +1,9 @@
-package com.github.sddisk.usernotes.store.entity
+package com.github.sddisk.usernotes.store.entity.user
 
+import com.github.sddisk.usernotes.store.entity.Auditable
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -17,8 +20,9 @@ class User(
     @NaturalId
     var email: String = "",
     var password: String = "",
+    @Enumerated(EnumType.STRING)
     var role: Role = Role.USER,
-) {
+): Auditable() {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

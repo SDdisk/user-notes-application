@@ -1,6 +1,6 @@
 package com.github.sddisk.usernotes.store.repository
 
-import com.github.sddisk.usernotes.store.entity.User
+import com.github.sddisk.usernotes.store.entity.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 

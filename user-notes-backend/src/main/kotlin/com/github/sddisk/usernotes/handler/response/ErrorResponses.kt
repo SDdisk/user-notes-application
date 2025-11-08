@@ -4,11 +4,6 @@ import java.time.LocalDateTime
 
 data class ErrorResponse(
     val message: String,
-    val timestamp: LocalDateTime
-)
-
-data class ErrorValidationResponse(
-    val message: String,
-    val details: List<String>,
-    val timestamp: LocalDateTime
+    val timestamp: LocalDateTime,
+    val details: List<String> = emptyList(),
 )

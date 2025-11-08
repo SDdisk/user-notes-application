@@ -3,7 +3,6 @@ package com.github.sddisk.usernotes.handler
 import com.github.sddisk.usernotes.exception.UserAlreadyExistsException
 import com.github.sddisk.usernotes.exception.UserNotFoundException
 import com.github.sddisk.usernotes.handler.response.ErrorResponse
-import com.github.sddisk.usernotes.handler.response.ErrorValidationResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.BadCredentialsException
@@ -18,14 +17,14 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun handleValidation(ex: MethodArgumentNotValidException): ErrorValidationResponse {
+    fun handleValidation(ex: MethodArgumentNotValidException): ErrorResponse {
         val errors = ex.bindingResult
             .fieldErrors
             .map { fieldError ->
                 "${fieldError.field}: $${fieldError.defaultMessage}"
             }
 
-        val response = ErrorValidationResponse(
+        val response = ErrorResponse(
             message = "Validation failed",
             details = errors,
             timestamp = LocalDateTime.now()
@@ -65,7 +64,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleBadCredentials(ex: BadCredentialsException): ErrorResponse {
-        val message = "Invalid credentials"
+        val message = "Invalid email or password"
 
         logEx(ex, message)
 

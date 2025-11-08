@@ -12,10 +12,10 @@ import java.util.UUID
 @Table(name = "user_table")
 class User(
     @Id @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID? = null,
+    var id: UUID? = null,
     var username: String = "",
     @NaturalId
-    val email: String = "",
+    var email: String = "",
     var password: String = "",
     var role: Role = Role.USER,
 ) {

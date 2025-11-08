@@ -2,7 +2,7 @@ package com.github.sddisk.usernotes.service.user
 
 import com.github.sddisk.usernotes.exception.UserNotFoundException
 import com.github.sddisk.usernotes.store.entity.user.User
-import com.github.sddisk.usernotes.store.repository.UserRepository
+import com.github.sddisk.usernotes.store.repository.user.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.UserDetails

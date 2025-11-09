@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -56,16 +57,16 @@ class AuthService(
         log.info("Login with request=$request")
 
         log.info("Authentication")
-        authenticationManager.authenticate(
+        val userDetails = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 request.email,
                 request.password
             )
-        )
+        ).principal as UserDetails
 
-        log.info("Loading user details")
-        val userDetails = userService.loadUserByUsername(request.email)
-        log.info("Loaded user details. Username=${userDetails.username}")
+        //log.info("Loading user details")
+        //val userDetails = userService.loadUserByUsername(request.email)
+        //log.info("Loaded user details. Username=${userDetails.username}")
 
         log.info("Creating refresh token cookie")
         jwtService.createRefreshTokenCookie(
@@ -113,7 +114,7 @@ class AuthService(
     private fun RegisterRequestDto.toUser() = User(
         email = email,
         username = username,
-        password = password // passEncoder -> userService
+        password = password
     )
 
     companion object {

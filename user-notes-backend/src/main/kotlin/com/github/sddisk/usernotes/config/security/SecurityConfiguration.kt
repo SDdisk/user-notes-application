@@ -12,8 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy.*
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.time.LocalDateTime
 
 @Configuration
 @EnableWebSecurity
@@ -27,26 +27,18 @@ class SecurityConfiguration {
         authConfig.authenticationManager
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity, jwtAuthFilter: JwtAuthenticationFilter): SecurityFilterChain =
+    fun securityFilterChain(
+        http: HttpSecurity,
+        jwtAuthFilter: JwtAuthenticationFilter
+    ): SecurityFilterChain =
         http
             .csrf { it.disable() }
             .cors { it.disable() }
-            .headers { it.disable() } // fix h2 page error: ERR_BLOCKED_BY_RESPONSE
             .formLogin { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(STATELESS) }
-            .exceptionHandling { handle ->
-                handle
-                    .authenticationEntryPoint { _, _, _ ->
-                        HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
-                    }
-                    .accessDeniedHandler { request, response, accessDeniedException ->
-                        response.status = HttpStatus.FORBIDDEN.value()
-                        response.writer.write("Access denied")
-                    }
-            }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/**", "/h2/**").permitAll()
+                    .requestMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)

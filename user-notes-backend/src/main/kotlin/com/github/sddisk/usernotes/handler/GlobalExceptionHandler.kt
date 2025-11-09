@@ -1,5 +1,6 @@
 package com.github.sddisk.usernotes.handler
 
+import com.github.sddisk.usernotes.exception.NoteNotFoundException
 import com.github.sddisk.usernotes.exception.UserAlreadyExistsException
 import com.github.sddisk.usernotes.exception.UserNotFoundException
 import com.github.sddisk.usernotes.handler.response.ErrorResponse
@@ -49,7 +50,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleUserNotFound(ex: UserNotFoundException): ErrorResponse {
         val message = ex.message ?: "User not found"
 
@@ -64,7 +65,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleBadCredentials(ex: BadCredentialsException): ErrorResponse {
-        val message = "Invalid email or password"
+        val message = ex.message ?: "Invalid credentials"
 
         logEx(ex, message)
 
@@ -73,6 +74,20 @@ class GlobalExceptionHandler {
             timestamp = LocalDateTime.now()
         )
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleNoteNotFound(ex: NoteNotFoundException): ErrorResponse {
+        val message = ex.message ?: "Note not found"
+
+        logEx(ex, message)
+
+        return ErrorResponse(
+            message = message,
+            timestamp = LocalDateTime.now()
+        )
+    }
+
 
     private fun logEx(
         ex: Exception,

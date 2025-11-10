@@ -14,11 +14,13 @@ spring:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
         format_sql: true
+  liquibase:
+    enabled: true
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

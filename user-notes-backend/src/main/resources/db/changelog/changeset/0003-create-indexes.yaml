@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-index-notes-user-id
+      author: SDdisk
+      comment: "Index added for better JOIN and WHERE performance on user_id"
+      changes:
+        - createIndex:
+            indexName: idx_notes_user_id
+            tableName: note_table
+            columns:
+              - column:
+                  name: user_id
+  - changeSet:
+      id: create-index-user-email
+      author: SDdisk
+      comment: "Index added for better SELECT and WHERE performance on email"
+      changes:
+        - createIndex:
+            indexName: idx_user_email
+            tableName: user_table
+            columns:
+              - column:
+                  name: email

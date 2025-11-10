@@ -33,10 +33,11 @@ class SecurityConfiguration {
             .csrf { it.disable() }
             .cors { it.disable() }
             .formLogin { it.disable() }
+            .headers { it.disable() } // h2 page fix
             .sessionManagement { it.sessionCreationPolicy(STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/**", "/h2/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)

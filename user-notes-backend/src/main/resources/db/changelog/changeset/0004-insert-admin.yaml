@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-admin-user
+      author: SDdisk
+      changes:
+        - insert:
+            tableName: user_table
+            columns:
+              - column:
+                  name: user_id
+                  value: "a0000000-a000-a000-a000-a00000000000"
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: email
+                  value: "TemiX002@mail.ru"
+              - column:
+                  name: password
+                  value: "$2a$10$BqFnlgtJgBU..3qCSv1JzuMkDNmn27i3wrOxyhz3GHDUXEtXFYuki"
+              - column:
+                  name: role
+                  value: "ADMIN"
+              - column:
+                  name: create_date
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: update_date
+                  valueComputed: CURRENT_TIMESTAMP

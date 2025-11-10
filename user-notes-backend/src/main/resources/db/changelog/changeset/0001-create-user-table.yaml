@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-table
+      author: SDdisk
+      changes:
+        - createTable:
+            tableName: user_table
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

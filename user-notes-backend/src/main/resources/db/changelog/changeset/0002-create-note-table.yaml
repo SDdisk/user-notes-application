@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-note-table
+      author: SDdisk
+      changes:
+        - createTable:
+            tableName: note_table
+            columns:
+              - column:
+                  name: note_id
+                  type: UUID
+                  generationType: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_note_user
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_pinned
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_important
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: note_table
+            baseColumnNames: user_id
+            referencedTableName: user_table
+            referencedColumnNames: user_id
+            constraintName: fk_note_user
+            onDelete: CASCADE
+            onUpdate: RESTRICT

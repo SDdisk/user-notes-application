@@ -8,16 +8,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: "a0000000-a000-a000-a000-a00000000000"
+                  value: ${ADMIN_USER_ID}
               - column:
                   name: username
-                  value: "admin"
+                  value: ${ADMIN_USERNAME}
               - column:
                   name: email
-                  value: "TemiX002@mail.ru"
+                  value: ${ADMIN_EMAIl}
               - column:
                   name: password
-                  value: "$2a$10$BqFnlgtJgBU..3qCSv1JzuMkDNmn27i3wrOxyhz3GHDUXEtXFYuki"
+                  value: ${ADMIN_PASSWORD}
               - column:
                   name: role
                   value: "ADMIN"

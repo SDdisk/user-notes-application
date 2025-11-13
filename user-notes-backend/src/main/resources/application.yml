@@ -12,6 +12,8 @@ spring:
     console:
       path: "/h2"
       enabled: true
+      settings:
+        web-allow-others: on
   jpa:
     hibernate:
       ddl-auto: validate

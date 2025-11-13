@@ -24,14 +24,18 @@ class JwtService(
         buildToken(
             userDetails = userDetails,
             expirationDate = Date(System.currentTimeMillis() + jwtProperty.accessTokenExpiration)
-        )
+        ).also {
+            log.info("Created access token")
+        }
 
     // refresh token
     fun generateRefreshToken(userDetails: UserDetails) =
         buildToken(
             userDetails = userDetails,
             expirationDate = Date(System.currentTimeMillis() + jwtProperty.refreshTokenExpiration)
-        )
+        ).also {
+            log.info("Created refresh token")
+        }
 
     fun createRefreshTokenCookie(refreshToken: String, servletResponse: HttpServletResponse) =
         Cookie("refreshToken", refreshToken).apply {
@@ -42,7 +46,7 @@ class JwtService(
                 ?.time?.toInt() ?: 0
         }.also { cookie ->
             servletResponse.addCookie(cookie)
-            log.info("Cookie created")
+            log.info("Refresh token cookie created")
         }
 
     fun deleteRefreshTokenCookie(servletResponse: HttpServletResponse) =
@@ -53,7 +57,7 @@ class JwtService(
             maxAge = 0
         }.also { cookie ->
             servletResponse.addCookie(cookie)
-            log.info("Cookie deleted")
+            log.info("Refresh token cookie deleted")
         }
 
     // is token valid
@@ -74,7 +78,7 @@ class JwtService(
         claimResolver(getAllClaims(token))
 
     // get claims
-    fun getAllClaims(token: String): Claims =
+    private fun getAllClaims(token: String): Claims =
         Jwts.parser()
             .verifyWith(secretKey)
             .build()

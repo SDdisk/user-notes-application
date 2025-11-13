@@ -31,25 +31,20 @@ class AuthService(
             throw UserAlreadyExistsException("User with email=${request.email} already exists")
         }
 
-        log.info("Mapping request to user")
         val user = request.toUser()
-
-        log.info("Saving user=$user")
         val saved = userService.save(user)
-
-        log.info("Loading user details")
         val userDetails = userService.loadUserByUsername(saved.email)
-        log.info("Loaded user details. Username=${userDetails.username}")
 
-        log.info("Creating refresh token cookie")
         jwtService.createRefreshTokenCookie(
             refreshToken = jwtService.generateRefreshToken(userDetails),
             servletResponse = servletResponse
         )
 
-        log.info("Return authentication response with access token after successful registration :)")
+        val accessToken = jwtService.generateAccessToken(userDetails)
+
+        log.info("User successfully registered")
         return AuthResponse(
-            accessToken = jwtService.generateAccessToken(userDetails)
+            accessToken = accessToken
         )
     }
 
@@ -64,30 +59,27 @@ class AuthService(
             )
         ).principal as UserDetails
 
-        //log.info("Loading user details")
-        //val userDetails = userService.loadUserByUsername(request.email)
-        //log.info("Loaded user details. Username=${userDetails.username}")
-
-        log.info("Creating refresh token cookie")
         jwtService.createRefreshTokenCookie(
             refreshToken = jwtService.generateRefreshToken(userDetails),
             servletResponse = servletResponse
         )
 
-        log.info("Return authentication response with access token after successful login :P")
+        val accessToken = jwtService.generateAccessToken(userDetails)
+
+        log.info("User successfully login")
         return AuthResponse(
-            accessToken = jwtService.generateAccessToken(userDetails)
+            accessToken = accessToken
         )
     }
 
     fun logout(servletResponse: HttpServletResponse) {
-        log.info("Logout request -> deleting refresh token cookie")
+        log.info("Logout request")
         jwtService.deleteRefreshTokenCookie(servletResponse)
         log.info("Successful logout")
     }
 
     fun refreshToken(refreshToken: String): AuthResponse {
-        log.info("Request to refresh token=$refreshToken")
+        log.info("Request to refresh token")
 
         log.info("Extract email from refresh token")
         val email = jwtService.extractEmail(refreshToken)
@@ -96,7 +88,6 @@ class AuthService(
                 throw MalformedJwtException("Invalid refresh token")
             }
 
-        log.info("Loading user details with email=$email")
         val userDetails = userService.loadUserByUsername(email)
 
         log.info("Validate refresh token with user details=$userDetails")
@@ -105,9 +96,11 @@ class AuthService(
             throw SignatureException("Invalid or expired refresh token")
         }
 
-        log.info("Return authentication response with access token after successful refresh token :3")
+        val accessToken = jwtService.generateAccessToken(userDetails)
+
+        log.info("Token successfully refreshed")
         return AuthResponse(
-            accessToken = jwtService.generateAccessToken(userDetails)
+            accessToken = accessToken
         )
     }
 

@@ -5,6 +5,7 @@ import com.github.sddisk.usernotes.service.user.UserService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -69,6 +70,8 @@ class JwtAuthenticationFilter(
     }
 
     private fun handleException(response: HttpServletResponse, ex: Exception) {
+        log.error("Handled exception $ex | Message: ${ex.message}")
+
         response.status = HttpStatus.UNAUTHORIZED.value()
         response.contentType = "application/json"
 
@@ -83,5 +86,9 @@ class JwtAuthenticationFilter(
             write(jsonResponse)
             flush()
         }
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
     }
 }

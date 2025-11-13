@@ -27,19 +27,26 @@ class UserServiceImpl(
 
     override fun findByEmail(email: String): User =
         userRepository.findByEmail(email)
-            ?: throw UserNotFoundException("User with email=$email not found")
+            ?.also {
+                log.info("Found user by email $email")
+            } ?: throw UserNotFoundException("User with email=$email not found")
 
     override fun existByEmail(email: String): Boolean =
         userRepository.existsByEmail(email)
 
     override fun findById(id: UUID): User =
         userRepository.findByIdOrNull(id)
-            ?: throw UserNotFoundException("User with id=$id not found")
+            ?.also {
+                log.info("Found user by id $id")
+            } ?: throw UserNotFoundException("User with id=$id not found")
 
     override fun loadUserByUsername(username: String): UserDetails {
+        log.info("Loading user by username $username")
+
         val user = userRepository.findByEmail(username)
             ?: throw UsernameNotFoundException("User with email=$username not found")
 
+        log.info("User loaded")
         return SecurityUser.builder()
             .username(user.email)
             .password(user.password)

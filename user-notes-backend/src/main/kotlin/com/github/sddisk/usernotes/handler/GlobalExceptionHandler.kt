@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingRequestCookieException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -93,6 +94,19 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleHttpMessageNotReadable(ex: HttpMessageNotReadableException): ErrorResponse {
         val message = ex.message ?: "Bad JSON format"
+
+        logEx(ex, message)
+
+        return ErrorResponse(
+            message = message,
+            timestamp = LocalDateTime.now()
+        )
+    }
+
+    @ExceptionHandler(MissingRequestCookieException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun handleMissingRequestCookie(ex: MissingRequestCookieException): ErrorResponse {
+        val message = ex.message
 
         logEx(ex, message)
 

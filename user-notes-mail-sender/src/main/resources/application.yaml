@@ -1,0 +1,31 @@
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: user-notes-mail-sender
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    sender:
+      name: ${SENDER_NAME}
+
+  kafka:
+    bootstrap-servers: kafka:9090
+    listener:
+      ack-mode: record
+    consumer:
+      group-id: mail-sender-consumer-group
+      auto-offset-reset: earliest
+
+server:
+  port: 8081

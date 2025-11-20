@@ -1,0 +1,40 @@
+package com.github.sddisk.usernotesmailsender.service
+
+import com.github.sddisk.usernotesmailsender.dto.EmailDto
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
+import org.springframework.mail.MailSender
+import org.springframework.mail.SimpleMailMessage
+import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.scheduling.annotation.Async
+import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
+
+@Service
+class EmailService(
+    private val mailSender: MailSender,
+    @Value("\${spring.mail.sender.name}") private val senderName: String,
+) {
+
+    @Async
+    fun sendEmail(emailDto: EmailDto) {
+        val simpleMessage = SimpleMailMessage().apply {
+            from = senderName
+            setTo(emailDto.to)
+            subject = emailDto.subject
+            text = emailDto.text
+        }
+        log.info("Created simple message: $simpleMessage")
+
+        mailSender.send(simpleMessage)
+        log.info("Mail send to ${emailDto.to}")
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
+}

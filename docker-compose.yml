@@ -1,0 +1,55 @@
+services:
+
+  user-notes-backend:
+    container_name: backend
+    build:
+      context: ./user-notes-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: ${DB_URL}
+      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      ACCESS_TOKEN_EXPIRATION: ${ACCESS_TOKEN_EXPIRATION}
+      REFRESH_TOKEN_EXPIRATION: ${REFRESH_TOKEN_EXPIRATION}
+      ADMIN_USER_ID: ${ADMIN_USER_ID}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+  kafka:
+    image: bitnamilegacy/kafka:latest
+    container_name: kafka
+    ports:
+      - '9092:9092' # HOST:CONTAINER
+    volumes:
+      - kafka-data:/bitnami
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=666
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9091 # NODE_ID@CONTAINER_NAME:CONTROLLER_PORT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9092 # BROKER -> 9090, CONTROLLER -> 9091, EXTERNAL -> 9092 (to access the broker). ВНУТРЕННЯЯ ТЕМКА
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9090,EXTERNAL://${HOSTNAME:-localhost}:9092 # А ПО КАКОМУ ПОРТУ КЛИЕНТЫ СМОГУТ ДОСТУЧАТЬСЯ ДО БРОКЕРА (ЕСЛИ HOSTNAME НЕ УКАЗАН -> БЕРЕТСЯ ПО ДЕФОЛТУ localhost). ВНЕШНЯЯ ТЕМКА
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER # NAME OF CONTROLLER = CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT # NAME OF BROKER = PLAINTEXT
+
+  user-notes-mail-sender:
+    container_name: mail-sender
+    build:
+      context: ./user-notes-mail-sender
+      dockerfile: Dockerfile
+    environment:
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - SENDER_NAME=${SENDER_NAME}
+    depends_on:
+      kafka:
+        condition: service_started
+
+volumes:
+  kafka-data:

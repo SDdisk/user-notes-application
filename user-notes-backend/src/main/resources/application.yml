@@ -23,6 +23,8 @@ spring:
         format_sql: true
   liquibase:
     enabled: true
+  kafka:
+    bootstrap-servers: kafka:9090
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

@@ -5,6 +5,7 @@ import com.github.sddisk.usernotes.api.dto.auth.LoginRequestDto
 import com.github.sddisk.usernotes.api.dto.auth.RegisterRequestDto
 import com.github.sddisk.usernotes.exception.UserAlreadyExistsException
 import com.github.sddisk.usernotes.service.jwt.JwtService
+import com.github.sddisk.usernotes.service.kafka.KafkaEmailService
 import com.github.sddisk.usernotes.service.user.UserService
 import com.github.sddisk.usernotes.store.entity.user.User
 import io.jsonwebtoken.MalformedJwtException
@@ -21,6 +22,7 @@ class AuthService(
     private val userService: UserService,
     private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService,
+    private val kafkaEmailService: KafkaEmailService,
 ) {
 
     fun register(request: RegisterRequestDto, servletResponse: HttpServletResponse): AuthResponse {
@@ -41,6 +43,8 @@ class AuthService(
         )
 
         val accessToken = jwtService.generateAccessToken(userDetails)
+
+        kafkaEmailService.sendWelcomeEmail(saved.email, saved.username)
 
         log.info("User successfully registered")
         return AuthResponse(

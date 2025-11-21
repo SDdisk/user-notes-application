@@ -36,12 +36,12 @@ databaseChangeLog:
               - column:
                   name: create_date
                   type: timestamp
-                  defaultValue: CURRENT_TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: update_date
                   type: timestamp
-                  defaultValue: CURRENT_TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false

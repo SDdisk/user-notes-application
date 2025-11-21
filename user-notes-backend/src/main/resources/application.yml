@@ -11,7 +11,7 @@ spring:
   h2:
     console:
       path: "/h2"
-      enabled: true
+      enabled: false # disabled
       settings:
         web-allow-others: on
   jpa:

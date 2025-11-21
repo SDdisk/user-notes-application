@@ -38,6 +38,8 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
 
     runtimeOnly("com.h2database:h2")
+    testImplementation("org.testcontainers:postgresql")
+    runtimeOnly("org.postgresql:postgresql")
     testImplementation("io.mockk:mockk:1.14.6")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")

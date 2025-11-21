@@ -16,7 +16,7 @@ services:
       context: ./user-notes-backend
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - DB_URL=${DB_URL}
       - DB_DRIVER_CLASS_NAME=${DB_DRIVER_CLASS_NAME}

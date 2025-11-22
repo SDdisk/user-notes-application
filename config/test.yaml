@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: some-test-service
+  main:
+    banner-mode: true
+  custom:
+    property: 'bla-bla-bla'

@@ -14,7 +14,7 @@ spring:
   liquibase:
     enabled: true
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgresql-database:5432/user_notes
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  liquibase:
+    enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+
+jwt:
+  secret-key: 070ca92449375d780759ada81217f307
+  access-token-expiration: 3600000
+  refresh-token-expiration: 604800000

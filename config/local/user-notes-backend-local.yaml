@@ -20,32 +20,3 @@ jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
   refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
-
-#spring:
-#  datasource:
-#    url: ${DB_URL}
-#    driver-class-name: ${DB_DRIVER_CLASS_NAME}
-#    username: ${DB_USERNAME}
-#    password: ${DB_PASSWORD}
-#  h2:
-#    console:
-#      path: "/h2"
-#      enabled: false # disabled
-#      settings:
-#        web-allow-others: on
-#  jpa:
-#    hibernate:
-#      ddl-auto: validate
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
-#  liquibase:
-#    enabled: true
-#  kafka:
-#    bootstrap-servers: kafka:9090 # localhost:9092
-#
-#jwt:
-#  secret-key: ${JWT_SECRET_KEY}
-#  access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
-#  refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}

@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_notes_db
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: postgres
+    url: ${DB_URL}
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -17,6 +17,35 @@ spring:
     bootstrap-servers: localhost:9092
 
 jwt:
-  secret-key: 070ca92449375d780759ada81217f307
-  access-token-expiration: 3600000
-  refresh-token-expiration: 604800000
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
+  refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
+
+#spring:
+#  datasource:
+#    url: ${DB_URL}
+#    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#  h2:
+#    console:
+#      path: "/h2"
+#      enabled: false # disabled
+#      settings:
+#        web-allow-others: on
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+#  liquibase:
+#    enabled: true
+#  kafka:
+#    bootstrap-servers: kafka:9090 # localhost:9092
+#
+#jwt:
+#  secret-key: ${JWT_SECRET_KEY}
+#  access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
+#  refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
